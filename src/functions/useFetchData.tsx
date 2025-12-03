@@ -19,9 +19,8 @@ export default function useFetchData(): OpenMeteoResponse | null | undefined {
             }
         };
 
-        fetchData(); // ejecutamos la función asíncrona
-    }, []);  // El array vacío asegura que el efecto se ejecute solo una vez después del primer renderizado
-
+        fetchData(); 
+    }, []);  
     return data;
 
 }
