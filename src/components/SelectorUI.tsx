@@ -32,10 +32,10 @@ export default function Selector({ onOptionSelect }: SelectorProps) {
                 <MenuItem disabled>
                     <em>Seleccione una ciudad</em>
                 </MenuItem>
-                <MenuItem value="guayaquil">Guayaquil</MenuItem>
-                <MenuItem value="quito">Quito</MenuItem>
-                <MenuItem value="manta">Manta</MenuItem>
-                <MenuItem value="cuenca">Cuenca</MenuItem>
+                <MenuItem value="Guayaquil">Guayaquil</MenuItem>
+                <MenuItem value="Quito">Quito</MenuItem>
+                <MenuItem value="Cuenca">Cuenca</MenuItem>
+
             </Select>
             {cityInput && (
                 <p>
