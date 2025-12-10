@@ -6,6 +6,7 @@ const CITY_COORDS: Record<string, { latitude: number; longitude: number }> = {
     Guayaquil: { latitude: -2.1962, longitude: -79.8862 },
     Quito: { latitude: -0.1807, longitude: -78.4678 },
     Cuenca: { latitude: -2.9006, longitude: -79.0045 },
+    Manta: { latitude: -0.9621, longitude: -80.7120 }
 };
 
 export default function useFetchData(
