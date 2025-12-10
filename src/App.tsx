@@ -10,10 +10,12 @@ import IndicatorUI from './components/IndicatorUI';
 import useFetchData from './functions/useFetchData';
 import TableUI from './components/TableUI';
 import ChartUI from './components/ChartUI';
+import { useState } from 'react';
 
 function App() {
     // const [count, setCount] = useState(0)
-    const dataFetcherOutput = useFetchData();
+    const [selectedOption, setSelectedOption] = useState<string | null>(null);
+    const dataFetcherOutput = useFetchData(selectedOption);
 
 
     return (
@@ -30,7 +32,7 @@ function App() {
                 </Grid>
 
                 {/* Selector */}
-                <Grid size={{ xs: 12, md: 3 }}> <SelectorUI /></Grid>
+                <Grid size={{ xs: 12, md: 3 }}> <SelectorUI onOptionSelect={setSelectedOption} /></Grid>
 
                 {/* Indicadores */}
                 <Grid container size={{ xs: 12, md: 9 }} >
