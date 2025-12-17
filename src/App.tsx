@@ -10,14 +10,23 @@ import ChartUI from "./components/ChartUI";
 import { useState, useMemo } from "react";
 import ThemeToggleUI from "./components/ThemeToggleUI";
 
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import WeatherIconUI from "./components/WeatherIconUI";
+
 import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
 import useAutoThemeMode from "./functions/useAutoThemeMode";
+
+import AirIcon from "@mui/icons-material/Air";
+import OpacityIcon from "@mui/icons-material/Opacity";
+import ThermostatIcon from "@mui/icons-material/Thermostat";
 
 function App() {
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
     const dataFetcherOutput = useFetchData(selectedOption);
 
-    // ✅ estado que controla el gráfico (criterio 10 pts)
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
     const { mode, userMode, setUserMode } = useAutoThemeMode();
@@ -44,52 +53,92 @@ function App() {
 
                     {/* Alertas */}
                     <Grid container justifyContent="right" alignItems="center">
-                        <AlertUI description="No se preveen lluvias" />
+                        {dataFetcherOutput && (() => {
+                            const code = dataFetcherOutput.current.weathercode;
+
+                            // Mensaje según weathercode (aprox, suficiente y entendible)
+                            const isRain =
+                                (code >= 51 && code <= 67) || (code >= 80 && code <= 82);
+                            const isStorm = code >= 95 && code <= 99;
+                            const isFog = code === 45 || code === 48;
+
+                            if (isStorm) {
+                                return <AlertUI severity="error" description="Tormenta probable. Toma precauciones." />;
+                            }
+                            if (isRain) {
+                                return <AlertUI severity="warning" description="Posibles lluvias. Considera llevar paraguas." />;
+                            }
+                            if (isFog) {
+                                return <AlertUI severity="info" description="Posible niebla. Maneja con precaución." />;
+                            }
+                            return <AlertUI severity="success" description="No se prevén lluvias." />;
+                        })()}
                     </Grid>
+
 
                     {/* Selector */}
                     <Grid size={{ xs: 12, md: 3 }}>
                         <SelectorUI
                             onOptionSelect={(city) => {
                                 setSelectedOption(city);
-                                setSelectedIndex(null); // reset selección al cambiar ciudad
+                                setSelectedIndex(null);
                             }}
                         />
                     </Grid>
 
                     {/* Indicadores */}
                     <Grid container size={{ xs: 12, md: 9 }}>
+                        {/* Temperatura con icono dinámico por weathercode */}
                         <Grid size={{ xs: 12, md: 3 }}>
                             {dataFetcherOutput && (
-                                <IndicatorUI
-                                    title="Temperatura (2m)"
-                                    description={`${dataFetcherOutput.current.temperature_2m} ${dataFetcherOutput.current_units.temperature_2m}`}
-                                />
+                                <Card>
+                                    <CardContent>
+                                        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                                            <WeatherIconUI code={dataFetcherOutput.current.weathercode} />
+
+                                            <Box>
+                                                <Typography variant="h5" component="div">
+                                                    {dataFetcherOutput.current.temperature_2m}{" "}
+                                                    {dataFetcherOutput.current_units.temperature_2m}
+                                                </Typography>
+                                                <Typography variant="body2" color="text.secondary">
+                                                    Temperatura (2m)
+                                                </Typography>
+                                            </Box>
+                                        </Box>
+                                    </CardContent>
+                                </Card>
                             )}
                         </Grid>
 
+                        {/* Temperatura aparente */}
                         <Grid size={{ xs: 12, md: 3 }}>
                             {dataFetcherOutput && (
                                 <IndicatorUI
+                                    icon={<ThermostatIcon />}
                                     title="Temperatura aparente"
                                     description={`${dataFetcherOutput.current.apparent_temperature} ${dataFetcherOutput.current_units.apparent_temperature}`}
                                 />
                             )}
                         </Grid>
 
+                        {/* Viento */}
                         <Grid size={{ xs: 12, md: 3 }}>
                             {dataFetcherOutput && (
                                 <IndicatorUI
+                                    icon={<AirIcon />}
                                     title="Velocidad del viento"
                                     description={`${dataFetcherOutput.current.wind_speed_10m} ${dataFetcherOutput.current_units.wind_speed_10m}`}
                                 />
                             )}
                         </Grid>
 
+                        {/* Humedad */}
                         <Grid size={{ xs: 12, md: 3 }}>
                             {dataFetcherOutput && (
                                 <IndicatorUI
-                                    title="Humedad relativa"
+                                    icon={<OpacityIcon />}
+                                    title="Humedad relativa actual del clima"
                                     description={`${dataFetcherOutput.current.relative_humidity_2m} ${dataFetcherOutput.current_units.relative_humidity_2m}`}
                                 />
                             )}
@@ -123,15 +172,16 @@ function App() {
                                         ? "Selecciona una hora en la tabla para ver un resumen detallado del clima."
                                         : `A las ${new Date(
                                             dataFetcherOutput.hourly.time[selectedIndex * 3]
-                                        ).getHours().toString().padStart(2, "0")
-                                        }:00 se espera una temperatura de ${dataFetcherOutput.hourly.temperature_2m[selectedIndex * 3]
+                                        )
+                                            .getHours()
+                                            .toString()
+                                            .padStart(2, "0")}:00 se espera una temperatura de ${dataFetcherOutput.hourly.temperature_2m[selectedIndex * 3]
                                         } °C y una velocidad del viento de ${dataFetcherOutput.hourly.wind_speed_10m[selectedIndex * 3]
                                         } m/s.`
                                 }
                             />
                         )}
                     </Grid>
-
                 </Grid>
             </div>
         </ThemeProvider>

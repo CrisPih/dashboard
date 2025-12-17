@@ -22,7 +22,7 @@ export default function useFetchData(
                 : CITY_COORDS["Guayaquil"];
 
         // **CORREGIDO: URL dinámica**
-        const URL = `https://api.open-meteo.com/v1/forecast?latitude=${cityConfig.latitude}&longitude=${cityConfig.longitude}&hourly=temperature_2m,wind_speed_10m&current=temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m&timezone=America%2FChicago`;
+        const URL = `https://api.open-meteo.com/v1/forecast?latitude=${cityConfig.latitude}&longitude=${cityConfig.longitude}&hourly=temperature_2m,wind_speed_10m,weathercode&current=temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m,weathercode&timezone=America%2FChicago`;
 
         const fetchData = async () => {
             try {

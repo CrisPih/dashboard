@@ -19,6 +19,7 @@ export interface CurrentUnits {
   relative_humidity_2m: string
   wind_speed_10m: string
   apparent_temperature: string
+  weathercode: string
 }
 
 export interface Current {
@@ -28,16 +29,20 @@ export interface Current {
   relative_humidity_2m: number
   wind_speed_10m: number
   apparent_temperature: number
+  weathercode: number
 }
 
 export interface HourlyUnits {
-  time: string
+  time: string[]
   temperature_2m: string
   wind_speed_10m: string
+  weathercode: string
 }
 
 export interface Hourly {
   time: string[]
   temperature_2m: number[]
   wind_speed_10m: number[]
+  weathercode: number[]
 }
+
